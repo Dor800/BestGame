@@ -1,4 +1,4 @@
-public abstract class Tile implements Comparable<Tile> {
+public abstract class Tile implements Comparable<Tile>,Visited {
     protected char tile;
     protected Position position;
 
@@ -10,6 +10,9 @@ public abstract class Tile implements Comparable<Tile> {
         this.position = position;
     }
 
+    protected double Range(Position position){
+        return Math.sqrt(Math.pow(position.getxAxis() - this.getPosition().getxAxis(),2) + Math.pow(position.getyAxis() - this.getPosition().getyAxis(),2));
+    }
     public char getTile() {
         return tile;
     }
@@ -33,5 +36,10 @@ public abstract class Tile implements Comparable<Tile> {
     public String toString() {
         return String.valueOf(tile);
     }
+
+    public void setTile(char tile) {
+        this.tile = tile;
+    }
+
 }
 

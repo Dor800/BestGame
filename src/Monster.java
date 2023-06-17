@@ -1,30 +1,59 @@
-public class Monster extends Enemy{
-    private Integer visionRange;
-    private Integer dx;
-    private Integer dy;
+import java.util.Random;
 
-    public Monster(char tile, String name, Integer healthPool, Integer healthAmount, Integer attackPoints, Integer defensePoints, Integer experienceValue, Integer visionRange) {
-        super(tile, name, healthPool, healthAmount, attackPoints, defensePoints, experienceValue);
+public class Monster extends Enemy{
+    private final Integer visionRange;
+
+    public Monster(char tile, String name, Integer healthPool, Integer attackPoints, Integer defensePoints, Integer experienceValue, Integer visionRange) {
+        super(tile, name, healthPool, healthPool, attackPoints, defensePoints, experienceValue);
         this.visionRange = visionRange;
     }
 
-    public void ChasePlayer(Player player){
-        if(range(this, player) < visionRange){
+
+    public void tick(Player player) {
+        if(!ChasePlayer(player.position))
+            moveRandomly();
+    }
+
+    public void moveRandomly(){
+        Random rand = new Random();
+        int direction = rand.nextInt(4);  // Generate a random number between 0 and 3
+
+        switch (direction) {
+            case 0:
+                moveUp();
+                break;
+            case 1:
+                moveDown();
+                break;
+            case 2:
+                moveLeft();
+                break;
+            case 3:
+                moveRight();
+                break;
+        }
+    }
+
+    public boolean ChasePlayer(Position playerP){
+        if(this.Range(playerP) < visionRange){
             Integer Mx = this.getPosition().getxAxis();
             Integer My = this.getPosition().getyAxis();
-            this.dx = Mx - player.getPosition().getxAxis();
-            this.dy = My - player.getPosition().getyAxis();
-            if(Math.abs(dx) > Math.abs(dy)) {
-                if (dx > 0)
-                    this.getPosition().setxAxis(Mx-1); // Move left
+            Integer dx = Mx - playerP.getxAxis();
+            Integer dy = My - playerP.getyAxis();
+            if(Math.abs(dy) > Math.abs(dx)) {
+                if (dy > 0)
+                    this.moveLeft();
                 else
-                    this.getPosition().setxAxis(Mx+1); // Move right
+                    this.moveRight();
             }
             else if (dy > 0)
                 this.getPosition().setyAxis(My+1); // Move up
             else
-                this.getPosition().setyAxis(My-1); // Move down
+                this.moveDown();
+            return true;
         }
+        return false;
     }
+
 
 }
